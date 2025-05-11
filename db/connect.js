@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 
-const connectionString =
-  "REMOVED";
+const connectDB = (url) => {
+  return mongoose
+  .connect(url)
+} 
 
-mongoose.connect(connectionString);
+module.exports = connectDB;
