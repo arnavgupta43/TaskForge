@@ -31,13 +31,17 @@ const getTask = async (req, res) => {
 };
 const updateTask = async (req, res) => {
   try {
-    const update_task = await Task.updateOne(
-      { name: req.body.name },
-      { completed: req.body.completed }
-    );
-    res.status(201).json({ sucess: true, updatedTask: update_task });
+    const { id: taskID } = req.params;
+    const task = await Task.findOneAndUpdate({ _id: taskID }, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    if (!task) {
+      return res.status(404).json({ msg: `No taks with id: ${taskID}` });
+    }
+    res.status(200).json({ task });
   } catch (error) {
-    return res.send(400).send({ msg: "Cannot update the given tasks" });
+    return res.send(400).send({ msg: error });
   }
 };
 const deleteTask = async (req, res) => {
