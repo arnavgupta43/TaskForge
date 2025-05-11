@@ -1,6 +1,11 @@
 const Task = require("../models/Task");
-const getAllTasks = (req, res) => {
-  res.send("all items from the file");
+const getAllTasks = async (req, res) => {
+  try {
+    const all_Task = await Task.find({});
+    res.status(200).json({ all_Task });
+  } catch (error) {
+    return res.send(400).send({ msg: "Cannot retrive tasks" });
+  }
 };
 
 const createtask = async (req, res) => {
@@ -11,14 +16,41 @@ const createtask = async (req, res) => {
     return res.status(400).send(error.message);
   }
 };
-const getTask = (req, res) => {
-  res.json({ id: req.params.id });
+
+const getTask = async (req, res) => {
+  try {
+    const { id: taskID } = req.params;
+    const task = await Task.findOne({ _id: taskID });
+    if (!task) {
+      return res.status(404).json({ msg: `No task with id: ${taskID}` });
+    }
+    res.status(200).json({ task });
+  } catch (error) {
+    return res.status(500).json({ msg: error });
+  }
 };
-const updateTask = (req, res) => {
-  res.send("Update a task");
+const updateTask = async (req, res) => {
+  try {
+    const update_task = await Task.updateOne(
+      { name: req.body.name },
+      { completed: req.body.completed }
+    );
+    res.status(201).json({ sucess: true, updatedTask: update_task });
+  } catch (error) {
+    return res.send(400).send({ msg: "Cannot update the given tasks" });
+  }
 };
-const deleteTask = (req, res) => {
-  res.send("Delete a task");
+const deleteTask = async (req, res) => {
+  try {
+    const { id: taskID } = req.params;
+    const task = await Task.findOneAndDelete({ _id: taskID });
+    if (!task) {
+      return res.status(404).json({ msg: `No task with id: ${taskID}` });
+    }
+    res.status(200).json({ task });
+  } catch (error) {
+    return res.send(400).send({ msg: error });
+  }
 };
 
 module.exports = {
