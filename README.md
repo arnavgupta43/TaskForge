@@ -57,6 +57,3 @@ The backend is structured with **custom error handling**, **middleware support**
 
 This project was built as part of a personal learning journey in **full-stack development**, focusing on backend architecture, REST API design, and frontend integration.
 
-## 📸 Screenshots
-
-![Frontend](image-2.png)
